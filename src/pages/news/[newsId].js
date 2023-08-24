@@ -8,21 +8,28 @@ import {
   ProfileOutlined,
 } from "@ant-design/icons";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useGetSingleNewsQuery } from "@/redux/api/api";
 
 const NewsDetailPage = ({ news }) => {
-  return (
+  const router = useRouter();
+  const id = router.query.newsId;
+  const { data, isLoading } = useGetSingleNewsQuery(id);
+  return isLoading ? (
+    <p>Loading...</p>
+  ) : (
     <Row style={{ marginTop: "80px", alignItems: "center" }}>
       <Col md={6} lg={12}>
         <Image
           alt="example"
-          src={news?.image_url}
+          src={data?.image_url}
           width={500}
           height={300}
           responsive
         />
       </Col>
       <Col md={6} lg={12} style={{ paddingLeft: "20px" }}>
-        <h1 style={{ fontSize: "30px" }}>{news?.title}</h1>
+        <h1 style={{ fontSize: "30px" }}>{data?.title}</h1>
         <span
           style={{
             color: "gray",
@@ -30,7 +37,7 @@ const NewsDetailPage = ({ news }) => {
             fontSize: "20px",
           }}
         >
-          <UserOutlined /> {news?.author}
+          <UserOutlined /> {data?.author}
         </span>
         <div
           className="line"
@@ -53,18 +60,18 @@ const NewsDetailPage = ({ news }) => {
           }}
         >
           <span>
-            <CalendarOutlined /> {news?.release_date}
+            <CalendarOutlined /> {data?.release_date}
           </span>
           <span>
-            <CommentOutlined /> {news?.comment_count} Comments
+            <CommentOutlined /> {data?.comment_count} Comments
           </span>
           <span>
-            <ProfileOutlined /> {news?.category}
+            <ProfileOutlined /> {data?.category}
           </span>
         </p>
 
         <p style={{ fontSize: "25px", fontWeight: "lighter" }}>
-          {news?.description}
+          {data?.description}
         </p>
       </Col>
     </Row>
@@ -77,14 +84,14 @@ NewsDetailPage.getLayout = function getLayout(page) {
   return <RootLayout>{page}</RootLayout>;
 };
 
-export const getServerSideProps = async (context) => {
-  const { params } = context;
-  const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
-  const data = await res.json();
+// export const getServerSideProps = async (context) => {
+//   const { params } = context;
+//   const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
+//   const data = await res.json();
 
-  return {
-    props: {
-      news: data,
-    },
-  };
-};
+//   return {
+//     props: {
+//       news: data,
+//     },
+//   };
+// };
