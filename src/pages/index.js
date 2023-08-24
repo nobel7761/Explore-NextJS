@@ -25,7 +25,7 @@ const HomePage = ({ allNews }) => {
       </Head>
       <DynamicBanner />
 
-      <AllNews allNews={data} />
+      <AllNews allNews={allNews} />
     </>
   );
 };
@@ -33,4 +33,15 @@ export default HomePage;
 
 HomePage.getLayout = function getLayout(page) {
   return <RootLayout>{page}</RootLayout>;
+};
+
+export const getServerSideProps = async () => {
+  const res = await fetch("http://localhost:3000/api/news");
+  const data = await res.json();
+
+  return {
+    props: {
+      allNews: data.data,
+    },
+  };
 };

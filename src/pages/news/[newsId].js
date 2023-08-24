@@ -11,13 +11,11 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useGetSingleNewsQuery } from "@/redux/api/api";
 
-const NewsDetailPage = ({ news }) => {
+const NewsDetailPage = ({ data }) => {
   const router = useRouter();
   const id = router.query.newsId;
-  const { data, isLoading } = useGetSingleNewsQuery(id);
-  return isLoading ? (
-    <p>Loading...</p>
-  ) : (
+  // const { data, isLoading } = useGetSingleNewsQuery(id);
+  return (
     <Row style={{ marginTop: "80px", alignItems: "center" }}>
       <Col md={6} lg={12}>
         <Image
@@ -84,14 +82,14 @@ NewsDetailPage.getLayout = function getLayout(page) {
   return <RootLayout>{page}</RootLayout>;
 };
 
-// export const getServerSideProps = async (context) => {
-//   const { params } = context;
-//   const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
-//   const data = await res.json();
+export const getServerSideProps = async (context) => {
+  const { params } = context;
+  const res = await fetch(`http://localhost:3000/news/${params.newsId}`);
+  const data = await res.json();
 
-//   return {
-//     props: {
-//       news: data,
-//     },
-//   };
-// };
+  return {
+    props: {
+      news: data,
+    },
+  };
+};
