@@ -77,23 +77,7 @@ NewsDetailPage.getLayout = function getLayout(page) {
   return <RootLayout>{page}</RootLayout>;
 };
 
-//! this function basically figure out that how many dynamic pages the application should be created. this helps the application for pre-render the dynamic pages.
-export const getStaticPaths = async () => {
-  const res = await fetch("http://localhost:5000/news");
-  const newses = await res.json();
-
-  const paths = newses.map((news) => ({
-    params: { newsId: news.id }, //! here we have to provide file name [newsId]
-  }));
-
-  return { paths, fallback: false };
-  //! for fallback there is 3 values! true, false, blocking.
-  //! false =>
-  //! true =>
-  //! blocking =>
-};
-
-export const getStaticProps = async (context) => {
+export const getServerSideProps = async (context) => {
   const { params } = context;
   const res = await fetch(`http://localhost:5000/news/${params.newsId}`);
   const data = await res.json();
